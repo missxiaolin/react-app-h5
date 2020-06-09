@@ -3,7 +3,7 @@
  * @param obj
  * @returns {boolean}
  */
-export function isFunction(obj) {
+export const isFunction = (obj) => {
     return typeof (obj) === "function";
 }
 
@@ -12,7 +12,7 @@ export function isFunction(obj) {
  * @param obj
  * @returns {boolean}
  */
-export function isString(obj) {
+export const isString = (obj) => {
     return typeof (obj) === "string";
 }
 
@@ -21,11 +21,11 @@ export function isString(obj) {
  * @param obj
  * @returns {boolean}
  */
-export function isBoolean(obj) {
+export const isBoolean = (obj) => {
     return typeof (obj) === "boolean";
 }
 
-export function isNumber(obj) {
+export const isNumber = (obj) => {
     return typeof (obj) === "number";
 }
 
@@ -34,11 +34,11 @@ export function isNumber(obj) {
  * @param obj
  * @returns {boolean}
  */
-export function isArray(obj) {
+export const isArray = (obj) => {
     return obj instanceof Array;
 }
 
-export function isObject(obj) {
+export const isObject = (obj) => {
     return typeof (obj) === "object";
 }
 
@@ -47,7 +47,7 @@ export function isObject(obj) {
  * @param obj
  * @returns {boolean}
  */
-export function isBlank(obj) {
+export const isBlank = (obj) => {
     return obj === null || obj === undefined || obj === "";
 }
 
@@ -56,7 +56,7 @@ export function isBlank(obj) {
  * @param obj
  * @returns {boolean}
  */
-export function isEmptyObj(obj) {
+export const isEmptyObj = (obj) => {
     for (var name in obj) {
         if (obj.hasOwnProperty(name)) {
             return false;
@@ -64,3 +64,4 @@ export function isEmptyObj(obj) {
     }
     return true;
 }
+
