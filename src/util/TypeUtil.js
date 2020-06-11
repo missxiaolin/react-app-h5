@@ -66,4 +66,38 @@ export const isEmptyObj = (obj) => {
 }
 
 
+/**
+ * 判断数据类型
+ */
+let _type = (function() {
+    let _obj = {
+        isNumeric: 'Number',
+        isBoolean: 'Boolean',
+        isString: 'String',
+        isNull: 'Null',
+        isUndefined: 'Undefined',
+        isSymbol: 'Symbol',
+        isPlainObject: 'Object',
+        isArray: 'Array',
+        isRegExp: 'RegExp',
+        isDate: 'Date',
+        isfunction: 'Function',
+        isWindow: 'Window'
+    }
+
+    var _type = {},
+        _toString = _type.toString
+    
+    for (var key in _obj) {
+        if (!_obj.hasOwnProperty(key)) break
+        _type[key] = (function() {
+            var reg = new RegExp("^\\[object " + _obj[key] + "\\]$")
+            return function anonymous(val) {
+                return reg.test(_toString.call(val))
+            }
+        })()
+    }
+
+    return _type
+})()
 

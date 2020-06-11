@@ -630,3 +630,42 @@ export const isObjectEqual = (a, b) => {
     }
     return true;
 }
+
+/**
+ * _each 遍历数组、类数组、对象每一项
+ * @param {*} obj 
+ * @param {*} callback 
+ * @param {*} context 
+ */
+export const _each = (obj, callback, context = window) => {
+    let isLikeArray = _type.isArray(obj) || (('length' in obj) && _type.isNumeric(obj.length))
+    typeof callback !== 'function' ? callback = Function.prototype : null
+
+    if (isLikeArray) {
+        let arr = [...obj]
+        for (let i = 0; i < arr.length; i++) {
+            let item = arr[i],
+                result = callback.call(context, item, i)
+
+            if (result === false) break
+            if (typeof result === 'undefined') continue
+            arr[i] = result
+        }
+        return arr
+    }
+
+    // 对象的处理
+    let opp = {
+        ...obj
+    }
+    for (let key in opp) {
+        if (!opp.hasOwnProperty(key)) break
+        let value = opp[key],
+            result = callback.call(context, value, key)
+        
+        if (result === false) break
+        if (typeof result === 'undefined') continue
+        opp[key] = result
+        return opp
+    }
+}
