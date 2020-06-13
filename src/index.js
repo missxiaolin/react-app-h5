@@ -5,6 +5,7 @@ import * as serviceWorker from './serviceWorker';
 import store from './store/index'
 import { Provider } from 'react-redux'
 import AppRouter from './router/index'
+import 'lib-flexible'
 
 ReactDOM.render(<Provider store={store}>
     <AppRouter />
