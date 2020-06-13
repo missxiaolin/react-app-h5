@@ -24,6 +24,8 @@ const getClientEnvironment = require('./env');
 const ModuleNotFoundPlugin = require('react-dev-utils/ModuleNotFoundPlugin');
 const ForkTsCheckerWebpackPlugin = require('react-dev-utils/ForkTsCheckerWebpackPlugin');
 const typescriptFormatter = require('react-dev-utils/typescriptFormatter');
+// 移动端适配
+const px2rem = require('postcss-px2rem-exclude');
 
 const postcssNormalize = require('postcss-normalize');
 
@@ -100,6 +102,7 @@ module.exports = function(webpackEnv) {
               },
               stage: 3,
             }),
+            px2rem({remUnit:75,exclude: /node_modules/i}),
             // Adds PostCSS Normalize as the reset css with default options,
             // so that it honors browserslist config in package.json
             // which in turn let's users customize the target behavior as per their needs.
