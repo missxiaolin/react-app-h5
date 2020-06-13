@@ -151,6 +151,27 @@
   "babel": {
     "presets": [
       "react-app"
+    ],
+    "plugins": [
+      [
+        "@babel/plugin-proposal-decorators",
+        {
+          "legacy": true
+        }
+      ]
     ]
-  }
+  },
+  "devDependencies": {
+    "babel-plugin-import": "^1.13.0"
+  },
+  "plugins": [
+    [
+      "import",
+      {
+        "libraryName": "antd-mobile",
+        "libraryDirectory": "es",
+        "style": "css"
+      }
+    ]
+  ]
 }
