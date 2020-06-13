@@ -662,10 +662,352 @@ export const _each = (obj, callback, context = window) => {
         if (!opp.hasOwnProperty(key)) break
         let value = opp[key],
             result = callback.call(context, value, key)
-        
+
         if (result === false) break
         if (typeof result === 'undefined') continue
         opp[key] = result
         return opp
     }
 }
+
+/**
+ * 验证英文姓名
+ * @param {*} value 
+ */
+export const isEnglishName = value => /(^[a-zA-Z]{1}[a-zA-Z\s]{0,20}[a-zA-Z]{1}$)/g.test(value);
+
+/**
+ * 验证中文姓名
+ * @param {*} value 
+ */
+export const isChineseName = value => /^(?:[\u4e00-\u9fa5·]{2,16})$/g.test(value);
+
+/**
+ * 获取窗口可视范围的高度
+ */
+export function getClientHeight() {
+    let clientHeight = 0;
+    if (document.body.clientHeight && document.documentElement.clientHeight) {
+        clientHeight = (document.body.clientHeight < document.documentElement.clientHeight) ? document.body.clientHeight : document.documentElement.clientHeight;
+    }
+    else {
+        clientHeight = (document.body.clientHeight > document.documentElement.clientHeight) ? document.body.clientHeight : document.documentElement.clientHeight;
+    }
+    return clientHeight;
+}
+
+/**
+ * 获取窗口可视范围宽度
+ */
+export function getPageViewWidth() {
+    let d = document,
+        a = d.compatMode == "BackCompat" ? d.body : d.documentElement;
+    return a.clientWidth;
+}
+
+/**
+ * 获取窗口宽度
+ */
+export function getPageWidth() {
+    let g = document,
+        a = g.body,
+        f = g.documentElement,
+        d = g.compatMode == "BackCompat" ? a : g.documentElement;
+    return Math.max(f.scrollWidth, a.scrollWidth, d.clientWidth);
+}
+
+/**
+ * 获取窗口尺寸
+ */
+export function getViewportOffset() {
+    if (window.innerWidth) {
+        return {
+            w: window.innerWidth,
+            h: window.innerHeight
+        }
+    } else {
+        // ie8及其以下
+        if (document.compatMode === "BackCompat") {
+            // 怪异模式
+            return {
+                w: document.body.clientWidth,
+                h: document.body.clientHeight
+            }
+        } else {
+            // 标准模式
+            return {
+                w: document.documentElement.clientWidth,
+                h: document.documentElement.clientHeight
+            }
+        }
+    }
+}
+
+/**
+ * 获取滚动条距顶部高度
+ */
+export function getPageScrollTop() {
+    let a = document;
+    return a.documentElement.scrollTop || a.body.scrollTop;
+}
+
+/**
+ * 获取滚动条距左边的高度
+ */
+export function getPageScrollLeft() {
+    let a = document;
+    return a.documentElement.scrollLeft || a.body.scrollLeft;
+}
+
+/**
+ * 返回当前滚动条位置
+ * @param {*} el 
+ */
+export const getScrollPosition = (el = window) => ({
+    x: el.pageXOffset !== undefined ? el.pageXOffset : el.scrollLeft,
+    y: el.pageYOffset !== undefined ? el.pageYOffset : el.scrollTop
+})
+
+/**
+ * 滚动到指定元素区域
+ * @param {*} element 
+ */
+export const smoothScroll = element => {
+    document.querySelector(element).scrollIntoView({
+        behavior: 'smooth'
+    })
+}
+
+/**
+ * 平滑滚动到页面顶部
+ */
+export const scrollToTop = () => {
+    const c = document.documentElement.scrollTop || document.body.scrollTop;
+    if (c > 0) {
+        window.requestAnimationFrame(scrollToTop);
+        window.scrollTo(0, c - c / 8);
+    }
+}
+
+/**
+ * 检查页面底部是否可见
+ */
+export const bottomVisible = () => {
+    return document.documentElement.clientHeight + window.scrollY >=
+        (document.documentElement.scrollHeight || document.documentElement.clientHeight);
+}
+
+/**
+ * 获取文件base64编码
+ * @param {*} file 
+ * @param {*} format 指定文件格式
+ * @param {*} size 指定文件大小(字节)
+ * @param {*} formatMsg 格式错误提示
+ * @param {*} sizeMsg 大小超出限制提示
+ * @returns {Promise<any>}
+ */
+export function fileToBase64String(file, format = ['jpg', 'jpeg', 'png', 'gif'], size = 20 * 1024 * 1024, formatMsg = '文件格式不正确', sizeMsg = '文件大小超出限制') {
+    return new Promise((resolve, reject) => {
+        // 格式过滤
+        let suffix = file.type.split('/')[1].toLowerCase();
+        let inFormat = false;
+        for (let i = 0; i < format.length; i++) {
+            if (suffix === format[i]) {
+                inFormat = true;
+                break;
+            }
+        }
+        if (!inFormat) {
+            reject(formatMsg);
+        }
+        // 大小过滤
+        if (file.size > size) {
+            reject(sizeMsg);
+        }
+        // 转base64字符串
+        let fileReader = new FileReader();
+        fileReader.readAsDataURL(file);
+        fileReader.onload = () => {
+            let res = fileReader.result;
+            resolve({ base64String: res, suffix: suffix });
+            reject('异常文件，请重新选择');
+        }
+    })
+}
+
+/**
+ * 递归生成树形结构
+ * @param {*} data 
+ * @param {*} pid 
+ * @param {*} pidName 
+ * @param {*} idName 
+ * @param {*} childrenName 
+ * @param {*} key 
+ */
+export function getTreeData(data, pid, pidName = 'parentId', idName = 'id', childrenName = 'children', key) {
+    let arr = [];
+
+    for (let i = 0; i < data.length; i++) {
+        if (data[i][pidName] == pid) {
+            data[i].key = data[i][idName];
+            data[i][childrenName] = getTreeData(data, data[i][idName], pidName, idName, childrenName);
+            arr.push(data[i]);
+        }
+    }
+
+    return arr;
+
+}
+
+/**
+ * 遍历树节点
+ * @param {*} data 
+ * @param {*} childrenName 
+ * @param {*} callback 
+ */
+export function foreachTree(data, childrenName = 'children', callback) {
+    for (let i = 0; i < data.length; i++) {
+        callback(data[i]);
+        if (data[i][childrenName] && data[i][childrenName].length > 0) {
+            foreachTree(data[i][childrenName], childrenName, callback);
+        }
+    }
+}
+
+/**
+ * 根据pid生成树形结构
+ * @param {*} items 后台获取的数据
+ * @param {*} id 数据中的id
+ * @param {*} link 生成树形结构的依据
+ */
+export const createTree = (items, id = null, link = 'pid') => {
+    items.filter(item => item[link] === id).map(item => ({ ...item, children: createTree(items, item.id) }));
+}
+
+/**
+ * 查询数组中是否存在某个元素并返回元素第一次出现的下标
+ * @param {*} item 
+ * @param {*} data 
+ */
+export function inArray(item, data) {
+    for (let i = 0; i < data.length; i++) {
+        if (item === data[i]) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+/**
+ * 判断手机是Andoird还是IOS
+ */
+export function getOSType() {
+    let u = navigator.userAgent, app = navigator.appVersion;
+    let isAndroid = u.indexOf('Android') > -1 || u.indexOf('Linux') > -1;
+    let isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
+    if (isIOS) {
+        return 0;
+    }
+    if (isAndroid) {
+        return 1;
+    }
+    return 2;
+}
+
+/**
+ * 函数防抖
+ * @param {*} func 函数
+ * @param {*} wait 延迟执行毫秒数
+ * @param {*} immediate true 表立即执行，false 表非立即执行
+ */
+export function debounce(func, wait, immediate) {
+    let timeout;
+    return function () {
+        let context = this;
+        let args = arguments;
+
+        if (timeout) clearTimeout(timeout);
+        if (immediate) {
+            let callNow = !timeout;
+            timeout = setTimeout(() => {
+                timeout = null;
+            }, wait);
+            if (callNow) func.apply(context, args)
+        }
+        else {
+            timeout = setTimeout(() => {
+                func.apply(context, args)
+            }, wait);
+        }
+
+    }
+}
+
+/**
+ * 函数节流
+ * @param {*} func 函数
+ * @param {*} wait 延迟执行毫秒数
+ * @param {*} type 1 表时间戳版，2 表定时器版
+ */
+export function throttle(func, wait, type) {
+    let previous, timeout;
+    if (type === 1) {
+        previous = 0;
+    } else if (type === 2) {
+        timeout = null;
+    }
+    return function () {
+        let context = this;
+        let args = arguments;
+        if (type === 1) {
+            let now = Date.now();
+
+            if (now - previous > wait) {
+                func.apply(context, args);
+                previous = now;
+            }
+        } else if (type === 2) {
+            if (!timeout) {
+                timeout = setTimeout(() => {
+                    timeout = null;
+                    func.apply(context, args)
+                }, wait)
+            }
+        }
+
+    }
+}
+
+/**
+ * 获取滚动条当前的位置
+ */
+function getScrollTop() {
+    var scrollTop = 0
+    if (document.documentElement && document.documentElement.scrollTop) {
+        scrollTop = document.documentElement.scrollTop;
+    } else if (document.body) {
+        scrollTop = document.body.scrollTop;
+    }
+    return scrollTop
+}
+
+/**
+ * 获取当前可视范围的高度
+ */
+function getClientHeight() {
+    var clientHeight = 0
+    if (document.body.clientHeight && document.documentElement.clientHeight) {
+        clientHeight = Math.min(document.body.clientHeight, document.documentElement.clientHeight)
+    } else {
+        clientHeight = Math.max(document.body.clientHeight, document.documentElement.clientHeight)
+    }
+    return clientHeight
+}
+
+/**
+ * 获取文档完整的高度
+ */
+function getScrollHeight() {
+    return Math.max(document.body.scrollHeight, document.documentElement.scrollHeight)
+}
+
