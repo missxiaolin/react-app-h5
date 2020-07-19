@@ -7,6 +7,8 @@ import { Provider } from 'react-redux'
 import AppRouter from './router/index'
 import 'lib-flexible'
 
+console.log(process.env.APP_HOST)
+
 ReactDOM.render(<Provider store={store}>
     <AppRouter />
   </Provider>,

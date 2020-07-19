@@ -27,6 +27,12 @@ const typescriptFormatter = require('react-dev-utils/typescriptFormatter');
 // 移动端适配
 const px2rem = require('postcss-px2rem-exclude');
 
+// gz 打包
+const CompressionPlugin = require("compression-webpack-plugin");
+
+// 配置文件
+const Dotenv = require('dotenv-webpack');
+
 const postcssNormalize = require('postcss-normalize');
 
 const appPackageJson = require(paths.appPackageJson);
@@ -38,8 +44,6 @@ const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== 'false';
 const shouldInlineRuntimeChunk = process.env.INLINE_RUNTIME_CHUNK !== 'false';
 
 const isExtendingEslintConfig = process.env.EXTEND_ESLINT === 'true';
-
-const CompressionPlugin = require("compression-webpack-plugin");
 
 const imageInlineSizeLimit = parseInt(
   process.env.IMAGE_INLINE_SIZE_LIMIT || '10000'
@@ -513,6 +517,7 @@ module.exports = function (webpackEnv) {
       ],
     },
     plugins: [
+      new Dotenv(),
       // compression-webpack-plugin 因为版本问题，2.x将 asset 改为了 filename
       new CompressionPlugin({
         filename: '[path].gz[query]', // 目标资源名称。[file] 会被替换成原资源。[path] 会被替换成原资源路径，[query] 替换成原查询字符串
