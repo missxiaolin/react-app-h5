@@ -67,3 +67,15 @@ This section has moved here: https://facebook.github.io/create-react-app/docs/de
 
 This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
 
+### nginx gz 配置
+
+~~~
+gzip on;
+gzip_static on;
+gzip_min_length 1k;
+gzip_buffers 16 64k;
+gzip_http_version 1.1;
+gzip_comp_level 9;
+gzip_types text/plain application/x-javascript text/css application/xml text/javascript application/x-httpd-php image/jpeg image/gif image/png;
+gzip_vary on;
+~~~
