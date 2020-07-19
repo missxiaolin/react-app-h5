@@ -85,7 +85,7 @@
   },
   "eslintConfig": {
     "extends": "react-app",
-    "rules":{
+    "rules": {
       "eqeqeq": "off"
     }
   },
@@ -165,7 +165,8 @@
     ]
   },
   "devDependencies": {
-    "babel-plugin-import": "^1.13.0"
+    "babel-plugin-import": "^1.13.0",
+    "compression-webpack-plugin": "^4.0.0"
   },
   "plugins": [
     [
