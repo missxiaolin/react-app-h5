@@ -163,7 +163,8 @@
         {
           "legacy": true
         }
-      ]
+      ],
+      ["import", { "libraryName": "antd-mobile", "style": "css" }]
     ]
   },
   "devDependencies": {
@@ -171,13 +172,6 @@
     "compression-webpack-plugin": "^4.0.0"
   },
   "plugins": [
-    [
-      "import",
-      {
-        "libraryName": "antd-mobile",
-        "libraryDirectory": "es",
-        "style": "css"
-      }
-    ]
+    
   ]
 }
