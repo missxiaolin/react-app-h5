@@ -163,8 +163,7 @@
         {
           "legacy": true
         }
-      ],
-      ["import", { "libraryName": "antd-mobile", "style": "css" }]
+      ]
     ]
   },
   "devDependencies": {
