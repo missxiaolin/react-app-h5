@@ -6,6 +6,7 @@ import store from './store/index'
 import { Provider } from 'react-redux'
 import AppRouter from './router/index'
 import 'lib-flexible'
+import 'antd-mobile/dist/antd-mobile.css'
 
 console.log(process.env.APP_HOST)
 
