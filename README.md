@@ -79,3 +79,17 @@ gzip_comp_level 9;
 gzip_types text/plain application/x-javascript text/css application/xml text/javascript application/x-httpd-php image/jpeg image/gif image/png;
 gzip_vary on;
 ~~~
+
+### nginx 部署
+
+~~~
+#根据路由设置，避免出现404
+location / {
+    try_files $uri $uri/ @router;
+    index index.html;
+}
+
+location @router {
+    rewrite ^.*$ /index.html last;
+}
+~~~
