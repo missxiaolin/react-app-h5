@@ -93,3 +93,14 @@ location @router {
     rewrite ^.*$ /index.html last;
 }
 ~~~
+
+### 反向代理（解决跨域）
+
+~~~
+
+# 匹配 api 路由的反向代理到API服务
+location /api/ {
+     proxy_pass http://192.168.xxx.xxx:xxxx/;
+}
+
+~~~
